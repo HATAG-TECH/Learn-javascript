@@ -1,0 +1,298 @@
+/* ===== Global Styles ===== */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    scroll-behavior: smooth;
+    background: linear-gradient(135deg, #87cefa, #e0ffff);
+    color: #2f4d6d;
+}
+
+/* ===== Header / Navbar ===== */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: rgba(46, 131, 222, 0.9);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+nav {
+    text-align: center;
+    padding: 10px 0;
+}
+
+nav h1 {
+    color: #fff;
+    margin: 0 0 10px 0;
+    font-size: 28px;
+}
+
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 20px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: 0.3s;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    background-color: #0056b3;
+}
+
+/* ===== Hero Section ===== */
+#home {
+    text-align: center;
+    padding: 80px 20px;
+    background: linear-gradient(to right, #6dd5ed, #2193b0);
+    color: #fff;
+}
+
+#home .hero-title {
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+#home p {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+#home button {
+    padding: 12px 25px;
+    background-color: #28a745;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#home button:hover {
+    background-color: #218838;
+}
+
+/* ===== Add Student Form Section ===== */
+section#addstudent {
+    padding: 50px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Form Section Title */
+section#addstudent h2 {
+    text-align: center;
+    font-size: 28px;
+    color: #2e83de;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Form Styling */
+form {
+    background: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 500px;
+}
+
+form fieldset {
+    border: none;
+    padding: 0;
+}
+
+form legend {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #2e83de;
+    text-align: center;
+    border-bottom: 2px solid #2e83de;
+    padding-bottom: 5px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.radio-group {
+    display: flex;
+    gap: 15px;
+}
+
+#preview {
+    margin-top: 10px;
+    border-radius: 50%;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.button-group button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    color: #fff;
+    transition: 0.3s;
+}
+
+.button-group button[type="submit"] {
+    background-color: #28a745;
+}
+
+.button-group button[type="submit"]:hover {
+    background-color: #218838;
+}
+
+.button-group button[type="reset"] {
+    background-color: #dc3545;
+}
+
+.button-group button[type="reset"]:hover {
+    background-color: #a71d2a;
+}
+
+/* ===== Table Section ===== */
+section#viewstudent {
+    padding: 50px 20px;
+    text-align: center;
+}
+
+#searchInput {
+    padding: 10px;
+    width: 80%;
+    max-width: 400px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+table {
+    width: 90%;
+    max-width: 900px;
+    margin: auto;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+table th, table td {
+    padding: 12px;
+    background-color: #f8f9fa;
+    text-align: center;
+    transition: 0.3s;
+}
+
+table th {
+    background-color: #2e83de;
+    color: #fff;
+    cursor: pointer;
+}
+
+table tr:hover td {
+    background-color: #d1ecf1;
+    color: #2f4d6d;
+}
+
+/* ===== Pagination ===== */
+.pagination {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.pagination button {
+    margin: 0 4px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 1px solid #2e83de;
+    background-color: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.pagination button:hover,
+.pagination button.active {
+    background-color: #2e83de;
+    color: #fff;
+}
+
+/* ===== Chart Section ===== */
+section#chart {
+    padding: 50px 20px;
+    text-align: center;
+}
+
+/* ===== Contact Section ===== */
+section#contact {
+    padding: 50px 20px;
+    text-align: center;
+    background: #e3f2fd;
+    border-top: 2px solid #2e83de;
+}
+
+section#contact p {
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+/* ===== Responsive Design ===== */
+@media(max-width:768px){
+    nav ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 14px;
+    }
+
+    #home .hero-title {
+        font-size: 28px;
+    }
+
+    #home p {
+        font-size: 16px;
+    }
+}

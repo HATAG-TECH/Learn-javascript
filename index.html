@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DBU Student Management System</title>
+  <link rel="stylesheet" href="index.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- Header / Navbar -->
+  <header>
+    <nav>
+      <h1>DBU Student Management System</h1>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#addstudent">Add Student</a></li>
+        <li><a href="#viewstudent">View Students</a></li>
+        <li><a href="#chart">Charts</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Home Section -->
+  <section id="home">
+    <h1 class="hero-title">Welcome to DBU University</h1>
+    <p>Manage students’ records, courses, grades, and dormitory information easily.</p>
+    <button onclick="scrollToForm()">Register Now</button>
+  </section>
+
+  <!-- Add Student Section -->
+  <section id="addstudent">
+    <h2>Add New Student</h2>
+    <form id="studentForm">
+      <fieldset>
+        <legend>Student Registration</legend>
+
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" placeholder="Enter full name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="rollnumber">Roll Number</label>
+          <input type="number" id="rollnumber" name="rollnumber" placeholder="Enter roll number" required>
+        </div>
+
+        <div class="form-group">
+          <label>Gender</label>
+          <div class="radio-group">
+            <label><input type="radio" name="sex" value="Male" required> Male</label>
+            <label><input type="radio" name="sex" value="Female"> Female</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="department">Department</label>
+          <select name="department" id="department" required>
+            <option value="">-- Select Department --</option>
+            <option value="CS">Computer Science</option>
+            <option value="SE">Software Engineering</option>
+            <option value="IT">Information Technology</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="address">Address</label>
+          <textarea id="address" name="address" rows="3" placeholder="Enter address"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="photo">Profile Picture</label>
+          <input type="file" id="photo" accept="image/*">
+          <img id="preview" width="100" style="display:none; margin-top:10px; border-radius:50%;">
+        </div>
+
+        <div class="button-group">
+          <button type="submit">Submit</button>
+          <button type="reset">Reset</button>
+        </div>
+
+      </fieldset>
+    </form>
+  </section>
+
+  <!-- View Students Section -->
+  <section id="viewstudent">
+    <h2>Student Records</h2>
+    <input type="text" id="searchInput" placeholder="Search by name, department or gender">
+    <table>
+      <caption>Registered Students</caption>
+      <thead>
+        <tr>
+          <th onclick="sortTable(0)">Roll No &#9650;&#9660;</th>
+          <th onclick="sortTable(1)">Name &#9650;&#9660;</th>
+          <th onclick="sortTable(2)">Department &#9650;&#9660;</th>
+          <th onclick="sortTable(3)">Gender &#9650;&#9660;</th>
+          <th>Photo</th>
+        </tr>
+      </thead>
+      <tbody id="studentTable">
+        <tr>
+          <td>12</td>
+          <td>Abebe</td>
+          <td>CS</td>
+          <td>M</td>
+          <td><img src="" alt="" width="50"></td>
+        </tr>
+        <tr>
+          <td>13</td>
+          <td>Kebede</td>
+          <td>SE</td>
+          <td>M</td>
+          <td><img src="" alt="" width="50"></td>
+        </tr>
+        <tr>
+          <td>15</td>
+          <td>Beletu</td>
+          <td>IT</td>
+          <td>F</td>
+          <td><img src="" alt="" width="50"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <div id="pagination" class="pagination"></div>
+  </section>
+
+  <!-- Charts Section -->
+  <section id="chart">
+    <h2>Department Distribution</h2>
+    <canvas id="deptChart" width="400" height="200"></canvas>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact">
+    <h2>Contact Us</h2>
+    <p>Email: dbu@gmail.com</p>
+    <p>Phone: +251-9-123-5446</p>
+    <p>Address: Ethiopia, Debre Berhan</p>
+  </section>
+
+  <!-- JS File -->
+  <script src="script.js"></script>
+</body>
+</html>
