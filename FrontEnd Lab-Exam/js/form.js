@@ -9,15 +9,44 @@ class StudentForm {
     }
 
     init() {
-        this.loadAutosave();
-        this.setupEventListeners();
-        this.setupPhotoUpload();
-        this.setupValidation();
-        this.setupAutoSave();
+        console.log('StudentForm: Initializing...');
+        
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.setup());
+        } else {
+            setTimeout(() => this.setup(), 100);
+        }
+    }
+
+    setup() {
+        console.log('StudentForm: Setting up...');
+        
+        try {
+            // Check if form exists
+            const form = document.getElementById('studentForm');
+            if (!form) {
+                console.warn('StudentForm: Form element not found');
+                return;
+            }
+            
+            this.loadAutosave();
+            this.setupEventListeners();
+            this.setupPhotoUpload();
+            this.setupValidation();
+            this.setupAutoSave();
+            
+            console.log('StudentForm: Ready ✓');
+            
+        } catch (error) {
+            console.error('StudentForm: Setup failed:', error);
+        }
     }
 
     setupEventListeners() {
-        // Step navigation
+        console.log('StudentForm: Setting up event listeners...');
+        
+        // Step navigation - add null checks
         document.querySelectorAll('.next-step').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const nextStep = parseInt(e.target.dataset.next);
@@ -35,26 +64,35 @@ class StudentForm {
         });
 
         // Form submission
-        document.getElementById('studentForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.submitForm();
-        });
+        const form = document.getElementById('studentForm');
+        if (form) {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.submitForm();
+            });
+        }
 
         // Reset form
-        document.getElementById('resetFormBtn').addEventListener('click', () => {
-            this.resetForm();
-        });
+        const resetBtn = document.getElementById('resetFormBtn');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => {
+                this.resetForm();
+            });
+        }
 
         // Form input changes for auto-save
-        document.querySelectorAll('#studentForm input, #studentForm select, #studentForm textarea').forEach(input => {
-            input.addEventListener('input', () => {
-                this.saveFormState();
+        const formInputs = document.querySelectorAll('#studentForm input, #studentForm select, #studentForm textarea');
+        if (formInputs.length > 0) {
+            formInputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    this.saveFormState();
+                });
+                
+                input.addEventListener('change', () => {
+                    this.saveFormState();
+                });
             });
-            
-            input.addEventListener('change', () => {
-                this.saveFormState();
-            });
-        });
+        }
 
         // Form section loaded event
         window.addEventListener('dashboard:add-student-loaded', () => {
@@ -66,6 +104,11 @@ class StudentForm {
         const uploadBtn = document.getElementById('uploadPhotoBtn');
         const photoInput = document.getElementById('profilePhoto');
         const preview = document.getElementById('photoPreview');
+
+        if (!uploadBtn || !photoInput || !preview) {
+            console.warn('StudentForm: Photo upload elements not found');
+            return;
+        }
 
         uploadBtn.addEventListener('click', () => {
             photoInput.click();
@@ -125,6 +168,8 @@ class StudentForm {
 
     updatePhotoPreview() {
         const preview = document.getElementById('photoPreview');
+        if (!preview) return;
+        
         if (this.photoPreview) {
             preview.innerHTML = `<img src="${this.photoPreview}" alt="Profile Preview">`;
             preview.classList.add('has-photo');
@@ -139,18 +184,23 @@ class StudentForm {
 
     setupValidation() {
         // Real-time validation
-        document.querySelectorAll('.input-group input, .input-group select, .input-group textarea').forEach(input => {
-            input.addEventListener('blur', () => {
-                this.validateField(input);
+        const inputs = document.querySelectorAll('.input-group input, .input-group select, .input-group textarea');
+        if (inputs.length > 0) {
+            inputs.forEach(input => {
+                input.addEventListener('blur', () => {
+                    this.validateField(input);
+                });
+                
+                input.addEventListener('input', () => {
+                    this.clearError(input.id);
+                });
             });
-            
-            input.addEventListener('input', () => {
-                this.clearError(input.id);
-            });
-        });
+        }
     }
 
     validateField(input) {
+        if (!input) return false;
+        
         const value = input.value.trim();
         const fieldId = input.id;
         let isValid = true;
@@ -200,7 +250,7 @@ class StudentForm {
             case 'gpa':
                 if (value) {
                     const gpa = parseFloat(value);
-                    if (gpa < 0 || gpa > 4) {
+                    if (isNaN(gpa) || gpa < 0 || gpa > 4) {
                         errorMessage = 'GPA must be between 0 and 4';
                         isValid = false;
                     }
@@ -228,9 +278,11 @@ class StudentForm {
     }
 
     checkRollNumberExists(rollNumber) {
+        if (!window.studentStorage) return false;
+        
         const students = window.studentStorage.getAllStudents();
         return students.some(student => 
-            student.rollNumber.toLowerCase() === rollNumber.toLowerCase()
+            student.rollNumber && student.rollNumber.toLowerCase() === rollNumber.toLowerCase()
         );
     }
 
@@ -261,14 +313,27 @@ class StudentForm {
 
     goToStep(step) {
         // Hide current step
-        document.querySelector(`.form-step[data-step="${this.currentStep}"]`).classList.remove('active');
+        const currentStepEl = document.querySelector(`.form-step[data-step="${this.currentStep}"]`);
+        if (currentStepEl) {
+            currentStepEl.classList.remove('active');
+        }
         
         // Update step indicator
-        document.querySelector(`.step[data-step="${this.currentStep}"]`).classList.remove('active');
+        const currentIndicator = document.querySelector(`.step[data-step="${this.currentStep}"]`);
+        if (currentIndicator) {
+            currentIndicator.classList.remove('active');
+        }
         
         // Show new step
-        document.querySelector(`.form-step[data-step="${step}"]`).classList.add('active');
-        document.querySelector(`.step[data-step="${step}"]`).classList.add('active');
+        const newStepEl = document.querySelector(`.form-step[data-step="${step}"]`);
+        if (newStepEl) {
+            newStepEl.classList.add('active');
+        }
+        
+        const newIndicator = document.querySelector(`.step[data-step="${step}"]`);
+        if (newIndicator) {
+            newIndicator.classList.add('active');
+        }
         
         // Update current step
         this.currentStep = step;
@@ -282,6 +347,8 @@ class StudentForm {
     updateReviewContent() {
         this.collectFormData();
         const reviewGrid = document.getElementById('reviewGrid');
+        
+        if (!reviewGrid) return;
         
         reviewGrid.innerHTML = `
             <div class="review-item">
@@ -325,19 +392,21 @@ class StudentForm {
 
     collectFormData() {
         const form = document.getElementById('studentForm');
+        if (!form) return;
+        
         const formData = new FormData(form);
         
         this.formData = {
-            fullName: formData.get('fullName'),
-            rollNumber: formData.get('rollNumber'),
-            email: formData.get('email'),
-            phone: formData.get('phone'),
-            gender: formData.get('gender'),
-            department: formData.get('department'),
-            gpa: parseFloat(formData.get('gpa')) || null,
-            enrollmentDate: formData.get('enrollmentDate'),
-            status: formData.get('status'),
-            address: formData.get('address'),
+            fullName: formData.get('fullName') || '',
+            rollNumber: formData.get('rollNumber') || '',
+            email: formData.get('email') || '',
+            phone: formData.get('phone') || '',
+            gender: formData.get('gender') || '',
+            department: formData.get('department') || '',
+            gpa: formData.get('gpa') ? parseFloat(formData.get('gpa')) : null,
+            enrollmentDate: formData.get('enrollmentDate') || '',
+            status: formData.get('status') || '',
+            address: formData.get('address') || '',
             profilePhoto: this.photoPreview
         };
     }
@@ -347,7 +416,9 @@ class StudentForm {
         for (let i = 1; i <= 2; i++) {
             if (!this.validateStep(i)) {
                 this.goToStep(i);
-                window.showToast('Please fix the errors in the form', 'error');
+                if (window.showToast) {
+                    window.showToast('Please fix the errors in the form', 'error');
+                }
                 return;
             }
         }
@@ -355,28 +426,46 @@ class StudentForm {
         this.collectFormData();
         
         try {
+            // Check if storage is available
+            if (!window.studentStorage) {
+                throw new Error('Storage system not available');
+            }
+            
             // Add student to storage
             const newStudent = window.studentStorage.addStudent(this.formData);
             
             // Show success message
-            window.showToast(`Student ${newStudent.name} added successfully!`, 'success');
+            if (window.showToast) {
+                window.showToast(`Student ${newStudent.name} added successfully!`, 'success');
+            }
             
             // Reset form
             this.resetForm();
             
             // Switch to students table
-            window.dashboard.switchSection('students');
+            if (window.dashboard) {
+                window.dashboard.switchSection('students');
+            }
             
             // Clear autosave
-            window.studentStorage.clearAutosaveData();
+            if (window.studentStorage.clearAutosaveData) {
+                window.studentStorage.clearAutosaveData();
+            }
             
         } catch (error) {
-            window.showToast(`Error adding student: ${error.message}`, 'error');
+            console.error('Error adding student:', error);
+            if (window.showToast) {
+                window.showToast(`Error adding student: ${error.message}`, 'error');
+            }
         }
     }
 
     resetForm() {
-        document.getElementById('studentForm').reset();
+        const form = document.getElementById('studentForm');
+        if (form) {
+            form.reset();
+        }
+        
         this.photoPreview = null;
         this.updatePhotoPreview();
         this.currentStep = 1;
@@ -385,12 +474,20 @@ class StudentForm {
         document.querySelectorAll('.form-step').forEach(step => {
             step.classList.remove('active');
         });
-        document.querySelector('.form-step[data-step="1"]').classList.add('active');
+        
+        const firstStep = document.querySelector('.form-step[data-step="1"]');
+        if (firstStep) {
+            firstStep.classList.add('active');
+        }
         
         document.querySelectorAll('.step').forEach(step => {
             step.classList.remove('active');
         });
-        document.querySelector('.step[data-step="1"]').classList.add('active');
+        
+        const firstIndicator = document.querySelector('.step[data-step="1"]');
+        if (firstIndicator) {
+            firstIndicator.classList.add('active');
+        }
         
         // Clear all errors
         document.querySelectorAll('.input-error').forEach(error => {
@@ -398,17 +495,24 @@ class StudentForm {
         });
         
         // Clear autosave
-        window.studentStorage.clearAutosaveData();
+        if (window.studentStorage && window.studentStorage.clearAutosaveData) {
+            window.studentStorage.clearAutosaveData();
+        }
         
         // Update autosave indicator
         this.updateAutosaveIndicator();
         
-        window.showToast('Form has been reset', 'info');
+        if (window.showToast) {
+            window.showToast('Form has been reset', 'info');
+        }
     }
 
     setupAutoSave() {
+        // Check if form exists before setting up autosave
+        if (!this.hasFormData()) return;
+        
         // Auto-save every 30 seconds
-        setInterval(() => {
+        this.autoSaveInterval = setInterval(() => {
             if (this.hasFormData()) {
                 this.saveFormState();
             }
@@ -420,21 +524,34 @@ class StudentForm {
 
     hasFormData() {
         const form = document.getElementById('studentForm');
+        if (!form) return false; // CRITICAL FIX: Added null check
+        
         const inputs = form.querySelectorAll('input, select, textarea');
-        return Array.from(inputs).some(input => input.value.trim() !== '');
+        return Array.from(inputs).some(input => {
+            const value = input.value || '';
+            return value.trim() !== '';
+        });
     }
 
     saveFormState() {
         this.collectFormData();
-        window.studentStorage.setAutosaveData(this.formData);
+        
+        if (window.studentStorage && window.studentStorage.setAutosaveData) {
+            window.studentStorage.setAutosaveData(this.formData);
+        }
+        
         this.updateAutosaveIndicator();
     }
 
     loadAutosave() {
+        if (!window.studentStorage || !window.studentStorage.getAutosaveData) return;
+        
         const autosave = window.studentStorage.getAutosaveData();
         if (autosave) {
             this.populateForm(autosave);
-            window.showToast('Form data restored from auto-save', 'info');
+            if (window.showToast) {
+                window.showToast('Form data restored from auto-save', 'info');
+            }
         }
     }
 
@@ -463,7 +580,12 @@ class StudentForm {
 
     updateAutosaveIndicator() {
         const indicator = document.getElementById('autosaveIndicator');
-        const hasAutosave = window.studentStorage.getAutosaveData() !== null;
+        if (!indicator) return;
+        
+        let hasAutosave = false;
+        if (window.studentStorage && window.studentStorage.getAutosaveData) {
+            hasAutosave = window.studentStorage.getAutosaveData() !== null;
+        }
         
         if (hasAutosave) {
             indicator.classList.add('active');
@@ -477,6 +599,8 @@ class StudentForm {
     }
 
     getTimeSinceAutosave() {
+        if (!window.studentStorage || !window.studentStorage.getAutosaveData) return '';
+        
         const autosave = window.studentStorage.getAutosaveData();
         if (!autosave || !autosave.savedAt) return '';
         
@@ -507,7 +631,12 @@ class StudentForm {
 
     // Error handling
     showError(fieldId, message) {
-        const inputGroup = document.getElementById(fieldId).closest('.input-group');
+        const input = document.getElementById(fieldId);
+        if (!input) return;
+        
+        const inputGroup = input.closest('.input-group');
+        if (!inputGroup) return;
+        
         const errorElement = inputGroup.querySelector('.input-error');
         
         if (errorElement) {
@@ -517,7 +646,10 @@ class StudentForm {
     }
 
     clearError(fieldId) {
-        const inputGroup = document.getElementById(fieldId).closest('.input-group');
+        const input = document.getElementById(fieldId);
+        if (!input) return;
+        
+        const inputGroup = input.closest('.input-group');
         if (inputGroup) {
             inputGroup.classList.remove('error');
             const errorElement = inputGroup.querySelector('.input-error');
@@ -528,7 +660,39 @@ class StudentForm {
     }
 }
 
-// Initialize form when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    window.studentForm = new StudentForm();
-});
+// Initialize form with safety checks
+function initializeStudentForm() {
+    try {
+        console.log('StudentForm: Attempting initialization...');
+        
+        // Check if form exists in DOM
+        const formExists = document.getElementById('studentForm') !== null;
+        
+        if (!formExists) {
+            console.log('StudentForm: Form not found in DOM, will initialize when added');
+            return null;
+        }
+        
+        // Initialize form
+        window.studentForm = new StudentForm();
+        console.log('StudentForm: Initialized successfully ✓');
+        
+        return window.studentForm;
+        
+    } catch (error) {
+        console.error('StudentForm: Failed to initialize:', error);
+        return null;
+    }
+}
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeStudentForm);
+} else {
+    setTimeout(initializeStudentForm, 0);
+}
+
+// Export for module systems
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = StudentForm;
+}

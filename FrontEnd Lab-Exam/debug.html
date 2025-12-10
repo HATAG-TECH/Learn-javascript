@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>Debug Console</h1>
+    <button onclick="testStorage()">Test Storage</button>
+    <button onclick="testNotifications()">Test Notifications</button>
+    <button onclick="testCharts()">Test Charts</button>
+    
+    <script src="js/storage.js"></script>
+    <script src="js/notifications.js"></script>
+    <script>
+        function testStorage() {
+            try {
+                const storage = new StudentStorage();
+                console.log('Storage OK:', storage.getAllStudents());
+                alert('Storage working!');
+            } catch(e) {
+                console.error('Storage failed:', e);
+                alert('Storage failed: ' + e.message);
+            }
+        }
+        
+        function testNotifications() {
+            try {
+                const notif = new NotificationSystem();
+                notif.showToast('Test toast', 'success');
+                console.log('Notifications OK');
+            } catch(e) {
+                console.error('Notifications failed:', e);
+                alert('Notifications failed: ' + e.message);
+            }
+        }
+        
+        function testCharts() {
+            console.log('Chart.js available:', typeof Chart);
+            alert('Chart.js: ' + (typeof Chart !== 'undefined' ? 'YES' : 'NO'));
+        }
+    </script>
+</body>
+</html>

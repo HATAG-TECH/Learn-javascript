@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBU Dashboard - Minimal Test</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 20px; }
+        .test-box { 
+            background: #f5f5f5; 
+            padding: 20px; 
+            margin: 10px 0; 
+            border-radius: 5px;
+        }
+        button { padding: 10px 20px; margin: 5px; }
+        #testResults { margin-top: 20px; padding: 10px; background: #e8f4fd; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>DBU Dashboard - System Test</h1>
+        
+        <div class="test-box">
+            <h2>File Structure Test</h2>
+            <button onclick="testFileStructure()">Check Files</button>
+        </div>
+        
+        <div class="test-box">
+            <h2>JavaScript Test</h2>
+            <button onclick="testJavaScript()">Test JS</button>
+        </div>
+        
+        <div class="test-box">
+            <h2>LocalStorage Test</h2>
+            <button onclick="testLocalStorage()">Test Storage</button>
+        </div>
+        
+        <div id="testResults"></div>
+    </div>
+    
+    <script>
+        function testFileStructure() {
+            const files = [
+                'css/style.css',
+                'css/form.css',
+                'css/table.css',
+                'css/cards.css',
+                'css/charts.css',
+                'css/darkmode.css',
+                'css/notifications.css',
+                'css/responsive.css',
+                'js/storage.js',
+                'js/main.js',
+                'js/form.js',
+                'js/table.js',
+                'js/cards.js',
+                'js/charts.js',
+                'js/notifications.js'
+            ];
+            
+            const results = [];
+            files.forEach(file => {
+                const xhr = new XMLHttpRequest();
+                xhr.open('HEAD', file, false);
+                try {
+                    xhr.send();
+                    results.push({
+                        file,
+                        exists: xhr.status === 200,
+                        status: xhr.status
+                    });
+                } catch {
+                    results.push({ file, exists: false, status: 'Error' });
+                }
+            });
+            
+            displayResults('File Structure', results);
+        }
+        
+        function testJavaScript() {
+            const tests = [
+                { name: 'Storage Class', test: () => typeof StudentStorage !== 'undefined' },
+                { name: 'Notification System', test: () => typeof NotificationSystem !== 'undefined' },
+                { name: 'Dashboard Class', test: () => typeof Dashboard !== 'undefined' },
+                { name: 'Chart.js', test: () => typeof Chart !== 'undefined' }
+            ];
+            
+            const results = tests.map(test => ({
+                name: test.name,
+                success: test.test(),
+                message: test.test() ? '✓ Available' : '✗ Missing'
+            }));
+            
+            displayResults('JavaScript', results);
+        }
+        
+        function testLocalStorage() {
+            try {
+                localStorage.setItem('test', 'value');
+                const retrieved = localStorage.getItem('test');
+                localStorage.removeItem('test');
+                
+                displayResults('LocalStorage', [{
+                    name: 'LocalStorage',
+                    success: retrieved === 'value',
+                    message: retrieved === 'value' ? '✓ Working' : '✗ Failed'
+                }]);
+            } catch (error) {
+                displayResults('LocalStorage', [{
+                    name: 'LocalStorage',
+                    success: false,
+                    message: `✗ Error: ${error.message}`
+                }]);
+            }
+        }
+        
+        function displayResults(title, results) {
+            const container = document.getElementById('testResults');
+            let html = `<h3>${title} Results</h3><ul>`;
+            
+            results.forEach(result => {
+                const icon = result.success ? '✅' : '❌';
+                html += `<li>${icon} ${result.name}: ${result.message}</li>`;
+            });
+            
+            html += '</ul>';
+            container.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

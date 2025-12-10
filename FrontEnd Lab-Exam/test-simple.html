@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .test { margin: 20px 0; padding: 20px; background: #f0f0f0; }
+        button { padding: 10px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>DBU Dashboard - Simple Test</h1>
+    
+    <div class="test">
+        <h3>Test 1: Check DOM Elements</h3>
+        <button onclick="checkElements()">Check Elements</button>
+        <div id="result1"></div>
+    </div>
+    
+    <div class="test">
+        <h3>Test 2: Test Storage</h3>
+        <button onclick="testStorage()">Test Storage</button>
+        <div id="result2"></div>
+    </div>
+    
+    <script src="js/storage.js"></script>
+    <script>
+        function checkElements() {
+            const elements = [
+                'studentsTable',
+                'studentForm',
+                'departmentChart',
+                'genderChart',
+                'kpiGrid'
+            ];
+            
+            const results = elements.map(id => {
+                const exists = document.getElementById(id) !== null;
+                return `${id}: ${exists ? '✅ Found' : '❌ Missing'}`;
+            });
+            
+            document.getElementById('result1').innerHTML = 
+                results.map(r => `<div>${r}</div>`).join('');
+        }
+        
+        function testStorage() {
+            try {
+                const storage = new StudentStorage();
+                const students = storage.getAllStudents();
+                const stats = storage.getStatistics();
+                
+                document.getElementById('result2').innerHTML = `
+                    <div>✅ Storage initialized</div>
+                    <div>📊 ${students.length} students</div>
+                    <div>📈 ${stats.total} total</div>
+                `;
+            } catch (error) {
+                document.getElementById('result2').innerHTML = 
+                    `<div style="color:red">❌ Storage error: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>
