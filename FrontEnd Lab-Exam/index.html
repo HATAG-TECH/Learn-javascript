@@ -1,149 +1,558 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DBU Student Management System</title>
-  <link rel="stylesheet" href="index.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBU Student Management Dashboard</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/form.css">
+    <link rel="stylesheet" href="css/table.css">
+    <link rel="stylesheet" href="css/cards.css">
+    <link rel="stylesheet" href="css/darkmode.css">
+    <link rel="stylesheet" href="css/notifications.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/icons/favicon.ico">
 </head>
 <body>
-
-  <!-- Header / Navbar -->
-  <header>
-    <nav>
-      <h1>DBU Student Management System</h1>
-      <ul>
-        <li><a href="#home">Home</a></li>
-        <li><a href="#addstudent">Add Student</a></li>
-        <li><a href="#viewstudent">View Students</a></li>
-        <li><a href="#chart">Charts</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <button class="menu-toggle" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="logo">
+                    <img src="assets/icons/dbu-logo.svg" alt="DBU Logo" class="logo-icon">
+                    <span class="logo-text">DBU Dashboard</span>
+                </div>
+                <div class="breadcrumbs" id="breadcrumbs">
+                    <a href="#home">Home</a>
+                    <span class="separator">/</span>
+                    <span class="current">Dashboard</span>
+                </div>
+            </div>
+            
+            <div class="nav-right">
+                <button class="nav-btn" id="searchToggle" title="Search">
+                    <svg class="icon"><use href="assets/icons/search-icon.svg#search"></use></svg>
+                </button>
+                <div class="search-box" id="searchBox">
+                    <input type="text" placeholder="Search students..." id="globalSearch">
+                    <button class="search-btn">Search</button>
+                </div>
+                
+                <button class="nav-btn notification-btn" id="notificationBtn" title="Notifications">
+                    <svg class="icon"><use href="assets/icons/bell-icon.svg#bell"></use></svg>
+                    <span class="badge" id="notificationBadge">3</span>
+                </button>
+                
+                <button class="nav-btn" id="darkModeToggle" title="Toggle Dark Mode">
+                    <svg class="icon" id="darkModeIcon"><use href="assets/icons/sun-icon.svg#sun"></use></svg>
+                </button>
+                
+                <div class="user-profile">
+                    <img src="assets/images/admin-avatar.jpg" alt="Admin" class="avatar">
+                    <div class="user-info">
+                        <span class="user-name">Admin User</span>
+                        <span class="user-role">Administrator</span>
+                    </div>
+                    <svg class="dropdown-icon"><use href="assets/icons/chevron-down.svg#chevron"></use></svg>
+                </div>
+            </div>
+        </div>
     </nav>
-  </header>
 
-  <!-- Home Section -->
-  <section id="home">
-    <h1 class="hero-title">Welcome to DBU University</h1>
-    <p>Manage students’ records, courses, grades, and dormitory information easily.</p>
-    <button onclick="scrollToForm()">Register Now</button>
-  </section>
+    <!-- Main Layout -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-menu">
+                <a href="#home" class="menu-item active" data-section="home">
+                    <svg class="menu-icon"><use href="assets/icons/home-icon.svg#home"></use></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#students" class="menu-item" data-section="students">
+                    <svg class="menu-icon"><use href="assets/icons/users-icon.svg#users"></use></svg>
+                    <span>Students</span>
+                </a>
+                <a href="#add-student" class="menu-item" data-section="add-student">
+                    <svg class="menu-icon"><use href="assets/icons/user-plus-icon.svg#user-plus"></use></svg>
+                    <span>Add Student</span>
+                </a>
+                <a href="#analytics" class="menu-item" data-section="analytics">
+                    <svg class="menu-icon"><use href="assets/icons/chart-icon.svg#chart"></use></svg>
+                    <span>Analytics</span>
+                </a>
+                <a href="#reports" class="menu-item" data-section="reports">
+                    <svg class="menu-icon"><use href="assets/icons/report-icon.svg#report"></use></svg>
+                    <span>Reports</span>
+                </a>
+                <a href="#settings" class="menu-item" data-section="settings">
+                    <svg class="menu-icon"><use href="assets/icons/settings-icon.svg#settings"></use></svg>
+                    <span>Settings</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <div class="status-indicator active"></div>
+                    <span>System Online</span>
+                </div>
+                <button class="logout-btn">
+                    <svg class="logout-icon"><use href="assets/icons/logout-icon.svg#logout"></use></svg>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
 
-  <!-- Add Student Section -->
-  <section id="addstudent">
-    <h2>Add New Student</h2>
-    <form id="studentForm">
-      <fieldset>
-        <legend>Student Registration</legend>
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <!-- Home Section -->
+            <section id="home" class="dashboard-section active">
+                <div class="section-header">
+                    <h1>Dashboard Overview</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="refreshBtn">
+                            <svg class="btn-icon"><use href="assets/icons/refresh-icon.svg#refresh"></use></svg>
+                            Refresh
+                        </button>
+                        <button class="btn btn-secondary" id="exportBtn">
+                            <svg class="btn-icon"><use href="assets/icons/download-icon.svg#download"></use></svg>
+                            Export
+                        </button>
+                    </div>
+                </div>
 
-        <div class="form-group">
-          <label for="name">Full Name</label>
-          <input type="text" id="name" name="name" placeholder="Enter full name" required>
+                <!-- KPI Cards -->
+                <div class="kpi-grid" id="kpiGrid">
+                    <!-- Cards will be dynamically loaded -->
+                </div>
+
+                <!-- Charts Row -->
+                <div class="charts-row">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Students by Department</h3>
+                            <select class="chart-filter" id="deptFilter">
+                                <option value="all">All Departments</option>
+                                <option value="CS">Computer Science</option>
+                                <option value="IT">Information Technology</option>
+                                <option value="ECE">Electronics</option>
+                            </select>
+                        </div>
+                        <canvas id="departmentChart"></canvas>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Gender Distribution</h3>
+                        </div>
+                        <canvas id="genderChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="activity-section">
+                    <div class="section-header">
+                        <h2>Recent Activity</h2>
+                        <button class="btn btn-text" id="viewAllActivity">View All</button>
+                    </div>
+                    <div class="activity-list" id="activityList">
+                        <!-- Activities will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Students Table Section -->
+            <section id="students" class="dashboard-section">
+                <div class="section-header">
+                    <h1>Student Records</h1>
+                    <div class="header-actions">
+                        <div class="search-container">
+                            <input type="text" id="tableSearch" placeholder="Search students...">
+                            <svg class="search-icon"><use href="assets/icons/search-icon.svg#search"></use></svg>
+                        </div>
+                        <button class="btn btn-danger" id="bulkDeleteBtn" disabled>
+                            <svg class="btn-icon"><use href="assets/icons/trash-icon.svg#trash"></use></svg>
+                            Delete Selected
+                        </button>
+                        <button class="btn btn-success" id="addNewBtn">
+                            <svg class="btn-icon"><use href="assets/icons/user-plus-icon.svg#user-plus"></use></svg>
+                            Add New
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Table Controls -->
+                <div class="table-controls">
+                    <div class="controls-left">
+                        <div class="entries-info">
+                            Show 
+                            <select id="entriesPerPage">
+                                <option value="10">10</option>
+                                <option value="25" selected>25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                            entries
+                        </div>
+                        <button class="btn btn-text" id="toggleCardView">
+                            <svg class="btn-icon"><use href="assets/icons/grid-icon.svg#grid"></use></svg>
+                            Card View
+                        </button>
+                    </div>
+                    <div class="controls-right">
+                        <button class="btn btn-secondary" id="exportTableBtn">
+                            <svg class="btn-icon"><use href="assets/icons/download-icon.svg#download"></use></svg>
+                            Export
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Students Table -->
+                <div class="table-container">
+                    <table id="studentsTable">
+                        <thead>
+                            <tr>
+                                <th class="checkbox-col">
+                                    <input type="checkbox" id="selectAll">
+                                </th>
+                                <th data-sort="rollNo">Roll No <span class="sort-icon"></span></th>
+                                <th data-sort="name">Name <span class="sort-icon"></span></th>
+                                <th data-sort="department">Department <span class="sort-icon"></span></th>
+                                <th data-sort="gender">Gender <span class="sort-icon"></span></th>
+                                <th data-sort="gpa">GPA <span class="sort-icon"></span></th>
+                                <th data-sort="status">Status <span class="sort-icon"></span></th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTableBody">
+                            <!-- Table rows will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Table Footer -->
+                <div class="table-footer">
+                    <div class="table-info" id="tableInfo">
+                        Showing 0 to 0 of 0 entries
+                    </div>
+                    <div class="pagination" id="pagination">
+                        <!-- Pagination will be generated here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Add Student Section -->
+            <section id="add-student" class="dashboard-section">
+                <div class="section-header">
+                    <h1>Add New Student</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-text" id="resetFormBtn">
+                            <svg class="btn-icon"><use href="assets/icons/reset-icon.svg#reset"></use></svg>
+                            Reset Form
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Multi-step Form -->
+                <div class="form-wizard">
+                    <div class="steps-indicator">
+                        <div class="step active" data-step="1">
+                            <span class="step-number">1</span>
+                            <span class="step-label">Basic Info</span>
+                        </div>
+                        <div class="step" data-step="2">
+                            <span class="step-number">2</span>
+                            <span class="step-label">Academic Info</span>
+                        </div>
+                        <div class="step" data-step="3">
+                            <span class="step-number">3</span>
+                            <span class="step-label">Review</span>
+                        </div>
+                    </div>
+
+                    <form id="studentForm" class="multi-step-form">
+                        <!-- Step 1: Basic Information -->
+                        <div class="form-step active" data-step="1">
+                            <div class="form-row">
+                                <div class="form-group photo-upload">
+                                    <div class="photo-container">
+                                        <div class="photo-preview" id="photoPreview">
+                                            <svg class="upload-icon"><use href="assets/icons/upload-icon.svg#upload"></use></svg>
+                                            <span>Click to upload photo</span>
+                                        </div>
+                                        <input type="file" id="profilePhoto" accept="image/*" hidden>
+                                        <button type="button" class="btn btn-text photo-btn" id="uploadPhotoBtn">
+                                            Choose Photo
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <div class="input-group floating">
+                                        <input type="text" id="fullName" required>
+                                        <label for="fullName">Full Name *</label>
+                                        <div class="input-error"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <div class="input-group floating">
+                                        <input type="text" id="rollNumber" required pattern="DBU\d{7}">
+                                        <label for="rollNumber">Roll Number *</label>
+                                        <div class="input-error"></div>
+                                        <small class="hint">Format: DBU2024001</small>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <div class="input-group floating">
+                                        <input type="email" id="email" required>
+                                        <label for="email">Email Address *</label>
+                                        <div class="input-error"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <div class="input-group floating">
+                                        <input type="tel" id="phone" pattern="[\+\d\s\-\(\)]{10,}">
+                                        <label for="phone">Phone Number</label>
+                                        <div class="input-error"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <div class="input-group floating">
+                                        <select id="gender" required>
+                                            <option value=""></option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                        <label for="gender">Gender *</label>
+                                        <div class="input-error"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary next-step" data-next="2">
+                                    Next <svg class="btn-icon"><use href="assets/icons/arrow-right.svg#arrow"></use></svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Academic Information -->
+                        <div class="form-step" data-step="2">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <div class="input-group floating">
+                                        <select id="department" required>
+                                            <option value=""></option>
+                                            <option value="Computer Science">Computer Science</option>
+                                            <option value="Information Technology">Information Technology</option>
+                                            <option value="Electronics">Electronics & Communication</option>
+                                            <option value="Mechanical">Mechanical Engineering</option>
+                                            <option value="Civil">Civil Engineering</option>
+                                            <option value="Business">Business Administration</option>
+                                        </select>
+                                        <label for="department">Department *</label>
+                                        <div class="input-error"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <div class="input-group floating">
+                                        <input type="number" id="gpa" min="0" max="4" step="0.1">
+                                        <label for="gpa">Current GPA</label>
+                                        <div class="input-error"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <div class="input-group floating">
+                                        <input type="date" id="enrollmentDate" required>
+                                        <label for="enrollmentDate">Enrollment Date *</label>
+                                        <div class="input-error"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <div class="input-group floating">
+                                        <select id="status" required>
+                                            <option value=""></option>
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                            <option value="Graduated">Graduated</option>
+                                            <option value="Suspended">Suspended</option>
+                                        </select>
+                                        <label for="status">Status *</label>
+                                        <div class="input-error"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group full-width">
+                                    <div class="input-group floating">
+                                        <textarea id="address" rows="3"></textarea>
+                                        <label for="address">Address</label>
+                                        <div class="input-error"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-text prev-step" data-prev="1">
+                                    <svg class="btn-icon"><use href="assets/icons/arrow-left.svg#arrow"></use></svg>
+                                    Previous
+                                </button>
+                                <button type="button" class="btn btn-secondary next-step" data-next="3">
+                                    Next <svg class="btn-icon"><use href="assets/icons/arrow-right.svg#arrow"></use></svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Review and Submit -->
+                        <div class="form-step" data-step="3">
+                            <div class="review-section">
+                                <h3>Review Information</h3>
+                                <div class="review-grid" id="reviewGrid">
+                                    <!-- Review content will be populated here -->
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-text prev-step" data-prev="2">
+                                    <svg class="btn-icon"><use href="assets/icons/arrow-left.svg#arrow"></use></svg>
+                                    Previous
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <svg class="btn-icon"><use href="assets/icons/save-icon.svg#save"></use></svg>
+                                    Save Student
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Auto-save Indicator -->
+                <div class="autosave-indicator" id="autosaveIndicator">
+                    <svg class="indicator-icon"><use href="assets/icons/save-icon.svg#save"></use></svg>
+                    <span>Auto-save enabled</span>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics" class="dashboard-section">
+                <div class="section-header">
+                    <h1>Analytics Dashboard</h1>
+                    <div class="header-actions">
+                        <div class="date-range">
+                            <input type="date" id="startDate">
+                            <span>to</span>
+                            <input type="date" id="endDate">
+                            <button class="btn btn-primary" id="applyDateRange">Apply</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Grid -->
+                <div class="analytics-grid">
+                    <div class="analytics-card large">
+                        <div class="card-header">
+                            <h3>Performance Trends</h3>
+                            <select class="chart-filter" id="trendFilter">
+                                <option value="gpa">GPA Trend</option>
+                                <option value="attendance">Attendance</option>
+                                <option value="courses">Course Completion</option>
+                            </select>
+                        </div>
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                    
+                    <div class="analytics-card">
+                        <div class="card-header">
+                            <h3>Department Performance</h3>
+                        </div>
+                        <canvas id="deptPerformanceChart"></canvas>
+                    </div>
+                    
+                    <div class="analytics-card">
+                        <div class="card-header">
+                            <h3>Enrollment Trends</h3>
+                        </div>
+                        <canvas id="enrollmentChart"></canvas>
+                    </div>
+                    
+                    <div class="analytics-card">
+                        <div class="card-header">
+                            <h3>Status Distribution</h3>
+                        </div>
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Confirm Action</h3>
+            <p id="modalMessage">Are you sure you want to perform this action?</p>
+            <div class="modal-actions">
+                <button class="btn btn-text" id="modalCancel">Cancel</button>
+                <button class="btn btn-danger" id="modalConfirm">Confirm</button>
+            </div>
         </div>
+    </div>
 
-        <div class="form-group">
-          <label for="rollnumber">Roll Number</label>
-          <input type="number" id="rollnumber" name="rollnumber" placeholder="Enter roll number" required>
+    <!-- Floating Action Button -->
+    <button class="fab" id="fab">
+        <svg class="fab-icon"><use href="assets/icons/plus-icon.svg#plus"></use></svg>
+        <div class="fab-menu">
+            <button class="fab-item" data-action="add-student">
+                <svg><use href="assets/icons/user-plus-icon.svg#user-plus"></use></svg>
+                Add Student
+            </button>
+            <button class="fab-item" data-action="quick-report">
+                <svg><use href="assets/icons/report-icon.svg#report"></use></svg>
+                Quick Report
+            </button>
+            <button class="fab-item" data-action="settings">
+                <svg><use href="assets/icons/settings-icon.svg#settings"></use></svg>
+                Settings
+            </button>
         </div>
+    </button>
 
-        <div class="form-group">
-          <label>Gender</label>
-          <div class="radio-group">
-            <label><input type="radio" name="sex" value="Male" required> Male</label>
-            <label><input type="radio" name="sex" value="Female"> Female</label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="department">Department</label>
-          <select name="department" id="department" required>
-            <option value="">-- Select Department --</option>
-            <option value="CS">Computer Science</option>
-            <option value="SE">Software Engineering</option>
-            <option value="IT">Information Technology</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="address">Address</label>
-          <textarea id="address" name="address" rows="3" placeholder="Enter address"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="photo">Profile Picture</label>
-          <input type="file" id="photo" accept="image/*">
-          <img id="preview" width="100" style="display:none; margin-top:10px; border-radius:50%;">
-        </div>
-
-        <div class="button-group">
-          <button type="submit">Submit</button>
-          <button type="reset">Reset</button>
-        </div>
-
-      </fieldset>
-    </form>
-  </section>
-
-  <!-- View Students Section -->
-  <section id="viewstudent">
-    <h2>Student Records</h2>
-    <input type="text" id="searchInput" placeholder="Search by name, department or gender">
-    <table>
-      <caption>Registered Students</caption>
-      <thead>
-        <tr>
-          <th onclick="sortTable(0)">Roll No &#9650;&#9660;</th>
-          <th onclick="sortTable(1)">Name &#9650;&#9660;</th>
-          <th onclick="sortTable(2)">Department &#9650;&#9660;</th>
-          <th onclick="sortTable(3)">Gender &#9650;&#9660;</th>
-          <th>Photo</th>
-        </tr>
-      </thead>
-      <tbody id="studentTable">
-        <tr>
-          <td>12</td>
-          <td>Abebe</td>
-          <td>CS</td>
-          <td>M</td>
-          <td><img src="" alt="" width="50"></td>
-        </tr>
-        <tr>
-          <td>13</td>
-          <td>Kebede</td>
-          <td>SE</td>
-          <td>M</td>
-          <td><img src="" alt="" width="50"></td>
-        </tr>
-        <tr>
-          <td>15</td>
-          <td>Beletu</td>
-          <td>IT</td>
-          <td>F</td>
-          <td><img src="" alt="" width="50"></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- Pagination Controls -->
-    <div id="pagination" class="pagination"></div>
-  </section>
-
-  <!-- Charts Section -->
-  <section id="chart">
-    <h2>Department Distribution</h2>
-    <canvas id="deptChart" width="400" height="200"></canvas>
-  </section>
-
-  <!-- Contact Section -->
-  <section id="contact">
-    <h2>Contact Us</h2>
-    <p>Email: dbu@gmail.com</p>
-    <p>Phone: +251-9-123-5446</p>
-    <p>Address: Ethiopia, Debre Berhan</p>
-  </section>
-
-  <!-- JS File -->
-  <script src="script.js"></script>
+    <!-- JavaScript Files -->
+    <script src="js/storage.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/form.js"></script>
+    <script src="js/table.js"></script>
+    <script src="js/cards.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/notifications.js"></script>
 </body>
 </html>

@@ -1,0 +1,85 @@
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: var(--neutral-900);
+    color: var(--neutral-200);
+}
+
+body.dark-mode .navbar {
+    background: var(--neutral-800);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3);
+}
+
+body.dark-mode .sidebar {
+    background: var(--neutral-800);
+}
+
+body.dark-mode .menu-item {
+    color: var(--neutral-300);
+}
+
+body.dark-mode .menu-item:hover {
+    background: var(--neutral-700);
+    color: var(--primary-400);
+}
+
+body.dark-mode .menu-item.active {
+    background: var(--neutral-700);
+    color: var(--primary-400);
+}
+
+body.dark-mode .section-header h1,
+body.dark-mode .section-header h2,
+body.dark-mode .section-header h3 {
+    color: var(--neutral-100);
+}
+
+body.dark-mode .btn-secondary {
+    background: var(--neutral-700);
+    color: var(--neutral-200);
+}
+
+body.dark-mode .btn-secondary:hover {
+    background: var(--neutral-600);
+}
+
+body.dark-mode .btn-text {
+    color: var(--primary-400);
+}
+
+body.dark-mode .btn-text:hover {
+    background: var(--neutral-800);
+}
+
+/* Chart dark mode adjustments */
+body.dark-mode canvas {
+    filter: brightness(0.9) contrast(1.1);
+}
+
+/* Table dark mode */
+body.dark-mode table {
+    color: var(--neutral-200);
+}
+
+body.dark-mode thead {
+    background: var(--neutral-800);
+}
+
+body.dark-mode tbody tr:hover {
+    background: var(--neutral-800);
+}
+
+/* Form dark mode */
+body.dark-mode .form-group input,
+body.dark-mode .form-group select,
+body.dark-mode .form-group textarea {
+    background: var(--neutral-800);
+    color: var(--neutral-200);
+    border-color: var(--neutral-600);
+}
+
+body.dark-mode .form-group input:focus,
+body.dark-mode .form-group select:focus,
+body.dark-mode .form-group textarea:focus {
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
